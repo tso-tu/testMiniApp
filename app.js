@@ -20,21 +20,34 @@ function showAlert() {
 }
 
 // Функция для отправки данных
-function sendData() {
+const BACKEND_URL = 'https://ваш-сервер.на-хостинге.com';
+
+async function sendData() {
     const data = {
         action: 'button_click',
-        timestamp: Date.now(),
-        user_id: user.id
+        user_id: user.id,
+        timestamp: Date.now()
     };
     
-    // Отправляем данные боту
-    tg.sendData(JSON.stringify(data));
-    
-    tg.showPopup({
-        title: 'Успешно!',
-        message: 'Данные отправлены',
-        buttons: [{ type: 'ok' }]
-    });
+    try {
+        const response = await fetch(`${BACKEND_URL}/web-data`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                initData: window.Telegram.WebApp.initData, // Важно!
+                data: data,
+                user: user
+            })
+        });
+        
+        const result = await response.json();
+        tg.showAlert(`Ответ сервера: ${result.message}`);
+    } catch (error) {
+        console.error('Error:', error);
+        tg.showAlert('Ошибка отправки');
+    }
 }
 
 // Закрытие приложения
@@ -48,4 +61,5 @@ tg.MainButton.show();
 tg.MainButton.onClick(closeApp);
 
 // Логируем событие открытия
+
 console.log('App launched:', tg.initDataUnsafe);
