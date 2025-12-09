@@ -20,7 +20,7 @@ function showAlert() {
 }
 
 // Функция для отправки данных
-const BACKEND_URL = 'https://ваш-сервер.на-хостинге.com';
+const BACKEND_URL = 'http://localhost:3000';
 
 async function sendData() {
     const data = {
@@ -63,3 +63,4 @@ tg.MainButton.onClick(closeApp);
 // Логируем событие открытия
 
 console.log('App launched:', tg.initDataUnsafe);
+
